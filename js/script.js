@@ -316,7 +316,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Validation
     const validation = () => {
-        const inputNumber = document.querySelectorAll('input[type="text"]');
+        const inputNumber = document.querySelectorAll('input[type="number"]');
 
         inputNumber.forEach(input => {
             input.addEventListener('input', event => {
