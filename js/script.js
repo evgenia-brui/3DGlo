@@ -316,13 +316,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Validation
     const validation = () => {
-        const inputNumber = document.querySelectorAll('input[type="number"]');
+        const inputNumber = document.querySelectorAll('input[type="text"]');
 
-        inputNumber.addEventListener('input', event => {
-            const target = event.target;
-            if (target.hasAttribute('placeholder') && target.getAttribute('placeholder') === 'Сумма') {
+        inputNumber.forEach(input => {
+            input.addEventListener('input', event => {
+                const target = event.target;
                 target.value = target.value.replace(/[^\d]/g, '');
-            }
+            });
         });
     };
     validation();
