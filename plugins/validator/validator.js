@@ -130,7 +130,7 @@ const validForm2 = new Validator({
     selector: '#form2',
     pattern: {
         phone: /^\d+$/,
-        text: /[а-я]/i
+        text: /^[а-я\s,.]+$/i
     },
     method: {
         'form2-phone': [
