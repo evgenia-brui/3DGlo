@@ -438,5 +438,5 @@ window.addEventListener('DOMContentLoaded', () => {
     formListener('input[type="number"]', 'input', /[^\d]/g);
     formListener('input[type="text"]', 'input', /[^а-яё\s]+/gi);
     formListener('#form2-message', 'input', /[^а-яё\s]+/gi);
-    formListener('input[type="tel"]', 'input', /[^\+?\d]+/g);
+    formListener('input[type="tel"]', 'input', /[^+?\d]+/g);
 });
