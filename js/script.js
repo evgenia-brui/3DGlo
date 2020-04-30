@@ -370,16 +370,73 @@ window.addEventListener('DOMContentLoaded', () => {
     };
     calc(100);
 
-    // Validation
-    const validation = () => {
-        const inputNumber = document.querySelectorAll('input[type="number"]');
+    // Send Form
+    const sendForm = formId => {
+        const errorMessage = 'Что-то пошло не так...',
+            loadMessage = `
+                <div class="sk-wandering-cubes">
+                    <div class="sk-cube sk-cube-1"></div>
+                    <div class="sk-cube sk-cube-2"></div>
+                </div>`,
+            successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
 
-        inputNumber.forEach(input => {
-            input.addEventListener('input', event => {
-                const target = event.target;
-                target.value = target.value.replace(/[^\d]/g, '');
+        const form = document.getElementById(formId);
+
+        const statusMessage = document.createElement('div');
+        statusMessage.style.cssText = 'font-size: 2rem;';
+
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+
+                if (request.status === 200) {
+                    outputData();
+                } else {
+                    errorData(request.status);
+                }
+            });
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.send(JSON.stringify(body));
+        };
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            form.appendChild(statusMessage);
+            statusMessage.innerHTML = loadMessage;
+            const formData = new FormData(form);
+            const body = {};
+            formData.forEach((val, key) => {
+                body[key] = val;
+            });
+            postData(body, () => {
+                statusMessage.textContent = successMessage;
+                form.reset();
+            }, error => {
+                statusMessage.textContent = errorMessage;
+                console.error(error);
             });
         });
     };
-    validation();
+    sendForm('form1');
+    sendForm('form2');
+    sendForm('form3');
+
+    // Validation
+    const formListener = (selector, listener, regex) => {
+        const inputItems = document.querySelectorAll(selector);
+        inputItems.forEach(input => {
+            input.addEventListener(listener, event => {
+                const target = event.target;
+                target.value = target.value.replace(regex, '');
+            });
+        });
+    };
+    formListener('input[type="number"]', 'input', /[^\d]/g);
+    formListener('input[type="text"]', 'input', /[^а-яё\s]+/gi);
+    formListener('#form2-message', 'input', /[^а-яё\s]+/gi);
+    formListener('input[type="tel"]', 'input', /[^\+?\d]+/g);
 });
