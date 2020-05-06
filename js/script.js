@@ -371,7 +371,7 @@ window.addEventListener('DOMContentLoaded', () => {
     calc(100);
 
     // Send Form
-    const sendForm = formId => {
+    const sendForm = () => {
         const errorMessage = 'Что-то пошло не так...',
             loadMessage = `
                 <div class="sk-wandering-cubes">
@@ -380,54 +380,47 @@ window.addEventListener('DOMContentLoaded', () => {
                 </div>`,
             successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
 
-        const form = document.getElementById(formId);
+        const forms = document.querySelectorAll('form');
 
         const statusMessage = document.createElement('div');
         statusMessage.style.cssText = 'font-size: 2rem;';
 
         const postData = body => {
-            return new Promise((resolve, reject) => {
-                const request = new XMLHttpRequest();
-                request.addEventListener('readystatechange', () => {
-                    if (request.readyState !== 4) {
-                        return;
-                    }
-
-                    if (request.status === 200) {
-                        resolve(successMessage);
-                    } else {
-                        reject(errorMessage);
-                    }
-                });
-                request.open('POST', './server.php');
-                request.setRequestHeader('Content-Type', 'application/json');
-                request.send(JSON.stringify(body));
+            return fetch('./server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
             });
         };
 
-        form.addEventListener('submit', event => {
-            event.preventDefault();
-            form.appendChild(statusMessage);
-            statusMessage.innerHTML = loadMessage;
-            const formData = new FormData(form);
-            const body = {};
-            formData.forEach((val, key) => {
-                body[key] = val;
-            });
-            postData(body)
-                .then(() => {
-                    statusMessage.textContent = successMessage;
-                    form.reset();
-                })
-                .catch(error => {
-                    statusMessage.textContent = errorMessage;
-                    console.error(error);
+        forms.forEach(form => {
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                form.appendChild(statusMessage);
+                statusMessage.innerHTML = loadMessage;
+                const formData = new FormData(form);
+                const body = {};
+                formData.forEach((val, key) => {
+                    body[key] = val;
                 });
+                postData(body)
+                    .then(response => {
+                        if (response.status !== 200) {
+                            throw new Error('Status network not 200');
+                        }
+                        statusMessage.textContent = successMessage;
+                        form.reset();
+                    })
+                    .catch(error => {
+                        statusMessage.textContent = errorMessage;
+                        console.error(error);
+                    });
+            });
         });
     };
-    sendForm('form1');
-    sendForm('form2');
-    sendForm('form3');
+    sendForm();
 
     // Validation
     const formListener = (selector, listener, regex) => {
