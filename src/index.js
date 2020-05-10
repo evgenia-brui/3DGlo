@@ -21,6 +21,7 @@ import changePhoto from './modules/changePhoto';
 import calc from './modules/calc';
 import sendForm from './modules/sendForm';
 import formListener from './modules/formListener';
+import maskPhone from './modules/maskPhone';
 
 //countTimer('22 april 2020');
 countTimer();
@@ -54,4 +55,4 @@ sendForm();
 formListener('input[type="number"]', 'input', /[^\d]/g);
 formListener('input[type="text"]', 'input', /[^а-яё\s]+/gi);
 formListener('#form2-message', 'input', /[^а-яё\s]+/gi);
-formListener('input[type="tel"]', 'input', /[^+?\d]+/g);
+maskPhone();
