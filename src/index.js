@@ -13,7 +13,6 @@ const isEmpty = s => s === null || !s || s.trim() === '';
 
 import countTimer from './modules/countTimer';
 import toggleMenu from './modules/toggleMenu';
-import animate from './modules/animate';
 import togglePopup from './modules/togglePopup';
 import smoothScroll from './modules/smoothScroll';
 import tabs from './modules/tabs';
