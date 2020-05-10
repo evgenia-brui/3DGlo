@@ -46,6 +46,7 @@ const countTimer = deadline => {
         }
     };
 
+    updateClock();
     const secondsInterval = setInterval(updateClock, 1000);
 };
 
