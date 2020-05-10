@@ -3,8 +3,10 @@ import animate from './animate';
 const togglePopup = () => {
     const popup = document.querySelector('.popup'),
         popupContent = document.querySelector('.popup-content'),
-        popupBtn = document.querySelectorAll('.popup-btn'),
-        pageWidth = document.documentElement.clientWidth;
+        popupBtn = document.querySelectorAll('.popup-btn');
+
+    let pageWidth = document.documentElement.clientWidth;
+    window.addEventListener('resize', () => pageWidth = document.documentElement.clientWidth);
 
     const animatePopup = () => animate({
         duration: 300,
@@ -21,11 +23,13 @@ const togglePopup = () => {
     });
 
     popupBtn.forEach(item => {
-        if (pageWidth > 768) {
-            item.addEventListener('click', animatePopup);
-        } else {
-            item.addEventListener('click', () => popup.style.display = 'block');
-        }
+        item.addEventListener('click', () => {
+            if (pageWidth >= 768) {
+                animatePopup();
+            } else {
+                popup.style.display = 'block';
+            }
+        });
     });
 
     popup.addEventListener('click', event => {
